@@ -34,7 +34,7 @@ export class AuthService {
       );
     } catch (error) {
       throw new RequestTimeoutException(error, {
-        description: 'Could not copmare password',
+        description: 'Could not compare password',
       });
     }
 
@@ -44,9 +44,13 @@ export class AuthService {
 
     const accessToken = await this.jwtService.signAsync(
       {
-        sub: user.id,
-        email: user.email,
-        role: user.role,
+        user: {
+          sub: user.id,
+          email: user.email,
+          role: user.role,
+          firstName: user.firstName,
+          lastName: user.lastName,
+        },
       },
       {
         audience: this.jwtConfiguration.audience,
@@ -57,7 +61,10 @@ export class AuthService {
     );
 
     return {
-      accessToken,
+      data: {
+        success: true,
+        accessToken,
+      },
     };
   }
 

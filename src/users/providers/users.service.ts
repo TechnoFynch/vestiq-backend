@@ -37,10 +37,15 @@ export class UsersService {
         role: user.role,
       };
 
-      return newUser;
+      return {
+        data: {
+          success: true,
+          user: newUser,
+        },
+      };
     } catch (error) {
       throw new RequestTimeoutException(
-        'Unable to process your request, pelase try later!',
+        'Unable to process your request, please try later!',
       );
     }
   }
@@ -55,7 +60,7 @@ export class UsersService {
     } catch (error) {
       if (error instanceof EntityNotFoundError) {
         throw new NotFoundException(
-          'The user does not exist, pelase check your email',
+          'The user does not exist, please check your email',
         );
       } else {
         throw new RequestTimeoutException(
