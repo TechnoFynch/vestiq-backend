@@ -8,6 +8,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { noop } from 'rxjs';
 import { ConfigModule } from '@nestjs/config';
 import jwtConfig from './config/jwt.config';
+import { AuthGuard } from './guards/auth.guard';
 
 @Module({
   controllers: [AuthController],
@@ -17,11 +18,13 @@ import jwtConfig from './config/jwt.config';
       provide: HashingProvider,
       useClass: BcryptProvider,
     },
+    AuthGuard,
   ],
   imports: [
     UsersModule,
     ConfigModule.forFeature(jwtConfig),
     JwtModule.registerAsync(jwtConfig.asProvider()),
   ],
+  exports: [AuthGuard],
 })
 export class AuthModule {}
