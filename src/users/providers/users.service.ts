@@ -8,6 +8,7 @@ import { CreateUserDto } from '../dtos/create-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../user.entity';
 import { EntityNotFoundError, Repository } from 'typeorm';
+import { UpdateUserDto } from '../dtos/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -68,5 +69,11 @@ export class UsersService {
         );
       }
     }
+  }
+
+  public async updateUser(updateUserDto: UpdateUserDto) {
+    // Check if user wants an email change
+    // Check if the email exists and return error if it is existing
+    // Update all the fields
   }
 }
