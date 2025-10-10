@@ -1,13 +1,16 @@
 import {
   Column,
   Entity,
+  JoinTable,
   ManyToMany,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Tag } from './enum/tag.enum';
 import { Category } from 'src/category/category.entity';
 import { Brand } from 'src/brand/brand.entity';
+import { ProductVariant } from 'src/product-variant/product-variant.entity';
 
 @Entity()
 export class Product {
@@ -37,30 +40,18 @@ export class Product {
   slug: string;
 
   @Column({
-    type: 'decimal',
-    nullable: false,
-    precision: 2,
-  })
-  price: number;
-
-  @Column({
-    type: 'int',
-    nullable: false,
-  })
-  stock: number;
-
-  @Column({
     type: 'enum',
     enum: Tag,
     nullable: true,
   })
-  tags?: Tag;
+  tag?: Tag;
 
   @Column({
     type: 'decimal',
     nullable: false,
     default: 0.0,
-    precision: 1,
+    precision: 2,
+    scale: 1,
   })
   ratingAverage: number;
 
@@ -72,8 +63,12 @@ export class Product {
   ratingCount: number;
 
   @ManyToMany(() => Category, (category) => category.products)
+  @JoinTable()
   categories: Category[];
 
-  @OneToMany(() => Brand, (brand) => brand.products)
+  @ManyToOne(() => Brand, (brand) => brand.products)
   brand: Brand;
+
+  @OneToMany(() => ProductVariant, (productVariant) => productVariant.product)
+  variants: ProductVariant[];
 }

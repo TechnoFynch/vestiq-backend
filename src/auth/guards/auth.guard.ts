@@ -47,10 +47,15 @@ export class AuthGuard implements CanActivate {
       );
 
     try {
-      const user: AuthUserType = await this.jwtService.verifyAsync(token, {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const payload = await this.jwtService.verifyAsync(token, {
         secret: this.jwtConfiguration.secret,
       });
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+      const user = payload.user;
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       request.user = user;
 
       const requiredRole = this.reflector.getAllAndOverride<UserRoleEnum>(

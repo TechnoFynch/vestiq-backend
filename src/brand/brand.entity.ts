@@ -1,5 +1,5 @@
 import { Product } from 'src/product/product.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Brand {
@@ -21,6 +21,6 @@ export class Brand {
   })
   slug: string;
 
-  @ManyToOne(() => Product, (products) => products.brand)
+  @OneToMany(() => Product, (products) => products.brand)
   products: Product[];
 }

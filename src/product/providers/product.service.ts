@@ -1,10 +1,15 @@
-import { Injectable, RequestTimeoutException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  RequestTimeoutException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from '../product.entity';
 import { ILike, Repository } from 'typeorm';
 import { CategoryService } from 'src/category/providers/category.service';
 import { BrandService } from 'src/brand/providers/brand.service';
 import { SearchQueryDto } from '../../common/dtos/search-query.dto';
+import { SpecialProductsProvider } from './special-products';
 
 @Injectable()
 export class ProductService {
@@ -13,6 +18,7 @@ export class ProductService {
     private readonly productRepository: Repository<Product>,
     private readonly categoryService: CategoryService,
     private readonly brandService: BrandService,
+    private readonly specialProductsProvider: SpecialProductsProvider,
   ) {}
 
   public async getQueryResults(query: string, limit: number, page: number) {
@@ -66,25 +72,43 @@ export class ProductService {
     //   },
     // };
 
-    return {
-      data: [
-        {
-          name: 'Air Max',
-          id: 'air-max',
-          category: 'shoes',
-          type: 'products',
-        },
-        {
-          id: 'nike',
-          name: 'Nike',
-          type: 'brands',
-        },
-        {
-          id: 'shoes',
-          name: 'Shoes',
-          type: 'categories',
-        },
-      ],
-    };
+    return [
+      {
+        name: 'Air Max Neo',
+        id: 'air-max',
+        category: 'shoes',
+        type: 'products',
+      },
+      {
+        id: 'nike',
+        name: 'Nike',
+        type: 'brands',
+      },
+      {
+        id: 'shoes',
+        name: 'Shoes',
+        type: 'categories',
+      },
+    ];
+  }
+
+  public async getSpecialProducts(type: string, limit: number, page: number) {
+    if (!type) {
+      throw new BadRequestException("Missing 'type' parameter");
+    }
+
+    switch (type) {
+      case 'new-arrivals':
+        return await this.specialProductsProvider.getNewArrivalProducts(
+          limit,
+          page,
+        );
+
+      case 'on-sale':
+        return await this.specialProductsProvider.getOnSaleProducts(
+          limit,
+          page,
+        );
+    }
   }
 }

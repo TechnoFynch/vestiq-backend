@@ -61,10 +61,8 @@ export class AuthService {
     );
 
     return {
-      data: {
-        success: true,
-        accessToken,
-      },
+      success: true,
+      accessToken,
     };
   }
 
